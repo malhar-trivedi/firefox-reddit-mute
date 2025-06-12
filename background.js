@@ -1,9 +1,14 @@
 browser.runtime.onInstalled.addListener(() => {
-    // Initialize storage with an empty array if not already set
-    browser.storage.local.set({ filterWords: [] }).then(() => {
-      console.log("Feed filter initialized with empty filter words.");
-    });
+  // First, get the current data
+  browser.storage.local.get("filterWords").then((data) => {
+    // Only set the initial value if it's not already defined
+    if (data.filterWords === undefined) {
+      browser.storage.local.set({ filterWords: [] }).then(() => {
+        console.log("Feed filter initialized for the first time.");
+      });
+    }
   });
+});
   
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "getFilterWords") {
